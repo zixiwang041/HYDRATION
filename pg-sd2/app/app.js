@@ -48,7 +48,7 @@ app.get("/goodbye", function (req, res) {
 // Responds to a 'GET' request
 app.get("/hello/:name", function (req, res) {
   // req.params contains any parameters in the request
-  // We can examine it in the console for debugging purposes
+  // We can examine it in the console for debugging purposesz
   console.log(req.params);
   //  Retrieve the 'name' parameter and use it in a dynamically generated page
   res.send("Hello " + req.params.name);
