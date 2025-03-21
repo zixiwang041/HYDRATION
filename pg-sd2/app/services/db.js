@@ -1,20 +1,20 @@
 require("dotenv").config();
 
-const mysql = require('mysql2/promise');
+const mysql = require("mysql2/promise");
 
 const config = {
-  db: { /* do not put password or any sensitive info here, done only for demo */
-    host: process.env.DB_CONTAINER,
-    port: process.env.DB_PORT,
-    user: process.env.MYSQL_ROOT_USER,
-    password: process.env.MYSQL_ROOT_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
+  db: {
+    host: process.env.DB_CONTAINER || "db", // Ensure it's correct
+    port: process.env.DB_PORT || 3306, // Default MySQL port
+    user: process.env.MYSQL_ROOT_USER || "root",
+    password: process.env.MYSQL_ROOT_PASSWORD || "password",
+    database: process.env.MYSQL_DATABASE || "hydration_db",
     waitForConnections: true,
-    connectionLimit: 2,
+    connectionLimit: 10,
     queueLimit: 0,
   },
 };
-  
+
 const pool = mysql.createPool(config.db);
 
 // Utility function to query the database
@@ -26,4 +26,4 @@ async function query(sql, params) {
 
 module.exports = {
   query,
-}
+};
