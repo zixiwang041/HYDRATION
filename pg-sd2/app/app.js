@@ -38,7 +38,7 @@ async function ensureTableExists() {
         time_slot ENUM('morning', 'afternoon', 'night') NOT NULL,
         amount INT NOT NULL DEFAULT 0,
         recorded_date DATE NOT NULL,
-        UNIQUE KEY unique_entry (time_slot, recorded_date)  -- Ensures only one entry per day per time_slot
+        UNIQUE KEY unique_entry (time_slot, recorded_date)
       )
     `;
     await db.query(sql);
@@ -50,7 +50,7 @@ async function ensureTableExists() {
 }
 ensureTableExists();
 
-// Reset Daily Water Intake at Midnight (Ensures Zero Intake at Start of Day)
+// Reset Daily Water Intake at Midnight
 schedule.scheduleJob("0 0 * * *", async function () {
   try {
     let todayDate = new Date().toISOString().split("T")[0];
@@ -81,17 +81,6 @@ app.get("/log-intake", (req, res) => {
   res.render("log-intake");
 });
 
-<<<<<<< HEAD
-// Create a dynamic route for /hello/<name>, where name is any value provided by user
-// At the end of the URL
-// Responds to a 'GET' request
-app.get("/hello/:name", function (req, res) {
-  // req.params contains any parameters in the request
-  // We can examine it in the console for debugging purposesz
-  console.log(req.params);
-  //  Retrieve the 'name' parameter and use it in a dynamically generated page
-  res.send("Hello " + req.params.name);
-=======
 app.post("/log-intake", async (req, res) => {
   try {
     const { timeSlot, amount } = req.body;
@@ -114,7 +103,6 @@ app.post("/log-intake", async (req, res) => {
     console.error("Error inserting water intake:", error);
     res.status(500).send("Internal Server Error. Check logs for details.");
   }
->>>>>>> 9ac7a38 (Updated app views, improved database setup, and fixed intake calculation.)
 });
 
 // Summary Route - Displays Daily Intake
@@ -133,12 +121,10 @@ app.get("/summary", async (req, res) => {
     if (Array.isArray(results) && results.length > 0) {
       results.forEach((row) => {
         if (row.time_slot) {
-          intakeData[row.time_slot] = Number(row.total); // Ensure number type
-          intakeData.totalIntake += Number(row.total); // Fix concatenation issue
+          intakeData[row.time_slot] = Number(row.total);
+          intakeData.totalIntake += Number(row.total);
         }
       });
-    } else {
-      console.warn("No data found for today.");
     }
 
     res.render("summary", {
@@ -153,7 +139,7 @@ app.get("/summary", async (req, res) => {
   }
 });
 
-// Auto Cleanup - Deletes Records Older Than 7 Days (Fixed SQL Syntax)
+// Auto Cleanup - Deletes Records Older Than 7 Days
 setInterval(async () => {
   try {
     let deleteSQL = `DELETE FROM water_intake WHERE recorded_date < DATE_SUB(CURDATE(), INTERVAL 7 DAY)`;
