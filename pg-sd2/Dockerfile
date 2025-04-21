@@ -1,20 +1,22 @@
-# Base image to use
-FROM node:latest
+# Use a specific LTS Node.js image (more stable than :latest)
+FROM node:18-alpine
 
-# set a working directory
+# Set working directory
 WORKDIR /src
 
-# Copy across project configuration information
-# Install application dependencies
-COPY package*.json /src/
+# Copy only package files to leverage Docker cache for layer reuse
+COPY package*.json ./
 
-# Ask npm to install the dependencies
-RUN npm install -g supervisor && npm install && npm install supervisor
+# Install dependencies globally and locally
+RUN npm install -g supervisor \
+  && npm install \
+  && npm cache clean --force
 
-# Copy across all our files
-COPY . /src
+# Copy the rest of the project files
+COPY . .
 
-# Expose our application port (3000)
+# Expose the app's port
 EXPOSE 3000
 
-
+# Run the app
+CMD ["supervisor", "index.js"]

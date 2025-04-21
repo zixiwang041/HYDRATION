@@ -2,92 +2,49 @@ doctype html
 html
   head
     title Water Intake Summary
-    style.
-      body {
-        font-family: Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        margin: 0;
-        padding: 20px;
-        background-color: #f8f9fa;
-      }
-      .container {
-        background: white;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        width: 400px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-      }
-      th, td {
-        border: 1px solid #ccc;
-        padding: 10px;
-        text-align: center;
-      }
-      th {
-        background-color: #007BFF;
-        color: white;
-      }
-      .link-container {
-        margin-top: 20px;
-      }
-      a {
-        text-decoration: none;
-        color: #007BFF;
-        font-weight: bold;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
-      footer {
-        margin-top: 20px;
-        font-size: 14px;
-        color: #666;
-        text-align: center;
-      }
-
+    link(rel="stylesheet", href="/style.css")
   body
-    header
+    //- Header
+    header.header
       h1 Hydration Tracker
-    
-    h2 Water Intake Summary
+      if name
+        h3 Hello, #{name}!
+        a(href="/logout", style="color: red; font-size: 0.9rem; margin-left: 1rem;") Logout
 
-    div.container
-      label(for='dateSelect') Date Select:
-      select(name='dateSelect')
-        option(value='today') Today
-        option(value='yesterday') Yesterday
-      
-      h2 Reports:
-      table
-        thead
-          tr
-            th Time Slot
-            th Intake (ml)
-        tbody
-          tr
-            td Morning
-            td #{morningIntake || 0} ml
-          tr
-            td Afternoon
-            td #{afternoonIntake || 0} ml
-          tr
-            td Night
-            td #{nightIntake || 0} ml
-          tr
-            td Total:
-            td #{totalIntake.toString().replace(/^0+/, '')} ml  
+    //- Main content
+    main
+      div.summary-card
+        h2 Water Intake Summary
 
-    div.link-container
-      a(href='/log-intake') Add Water Intake
+        form(method="GET" action="/summary")
+          label(for="date") Date Select:
+          select(name="date" id="date")
+            option(value="today") Today
 
+        h3 Reports:
+
+        table
+          thead
+            tr
+              th Time Slot
+              th Intake (ml)
+          tbody
+            tr
+              td Morning
+              td #{morning} ml
+            tr
+              td Afternoon
+              td #{afternoon} ml
+            tr
+              td Night
+              td #{night} ml
+            tr
+              td Total:
+              td #{totalIntake} ml
+
+        .link-container
+          a(href="/log-intake") Add Water Intake
+
+    //- Footer
     footer
       p © 2025 Hydration Tracker. All rights reserved.

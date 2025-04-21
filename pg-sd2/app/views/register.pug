@@ -1,0 +1,62 @@
+doctype html
+html
+  head
+    title Sign Up
+    link(rel="stylesheet", href="/style.css")
+
+  body
+    header.header
+      h1 Hydration Tracker
+
+    main
+      .card-form
+        h2 Registration Form
+        form#register-form(action="/register" method="POST")
+
+          // Username
+          label(for="username") Username:
+          input#username(type="text" name="username" required)
+
+          // First Name
+          label(for="first") First Name:
+          input#first(type="text" name="first" required)
+
+          // Last Name
+          label(for="last") Last Name:
+          input#last(type="text" name="last" required)
+
+          // Email
+          label(for="email") Email:
+          input#email(type="email" name="email" required)
+
+          // Password
+          label(for="password") Password:
+          input#password(
+            type="password"
+            name="password"
+            pattern="^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9])\\S{8,}$"
+            title="Password must contain at least one number, one alphabet, one symbol, and be at least 8 characters long"
+            required
+          )
+
+          // Re-type Password
+          label(for="repassword") Re-type Password:
+          input#repassword(type="password" name="repassword" required)
+
+          // Gender
+          label(for="gender") Gender:
+          select#gender(name="gender" required)
+            option(value="" disabled selected) Select your gender
+            option(value="male") Male
+            option(value="female") Female
+            option(value="other") Other
+
+          // Submit Button
+          button(type="submit") Submit
+
+        // Link to login
+        .link-container
+          a(href="/login") Already have an account? Log in
+
+    footer
+      p © 2025 Hydration Tracker. All rights reserved.

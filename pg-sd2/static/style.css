@@ -1,0 +1,251 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sticky Header */
+.header {
+  background: rgb(156, 192, 232);
+  color: black;
+  padding: 25px 0;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  flex-shrink: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Main Layout */
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 10px;
+}
+
+/* Card Form Container */
+.card-form {
+  background-color: #fff;
+  padding: 20px 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 720px;
+  text-align: left;
+  margin: 0 auto;
+}
+
+/* Title */
+.card-form h2 {
+  color: #4caf50;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 22px;
+}
+
+/* Two-column layout */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px 20px;
+  margin-bottom: 20px;
+}
+
+/* Input styling */
+.card-form label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.card-form input[type="text"],
+.card-form input[type="email"],
+.card-form input[type="password"],
+.card-form input[type="tel"],
+.card-form input[type="number"],
+.card-form select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  transition: border 0.2s ease;
+  box-sizing: border-box;
+}
+
+.card-form input:focus,
+.card-form select:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+/* Gender Section */
+.gender-group {
+  margin: 15px 0;
+}
+
+.gender-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.radio-options {
+  display: flex;
+  gap: 20px;
+}
+
+.radio-options label {
+  font-weight: normal;
+  font-size: 14px;
+  color: #444;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Button */
+.card-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.card-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Link Container */
+.link-container {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.link-container a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.link-container a:hover {
+  text-decoration: underline;
+}
+
+/* Sticky Footer */
+footer {
+  background: rgb(156, 192, 232);
+  padding: 14px;
+  text-align: center;
+  font-size: 13.5px;
+  color: #666;
+  flex-shrink: 0;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+  margin-top: auto;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .radio-options {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* ===== Summary Page Styles ===== */
+.summary-card {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.summary-card h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.summary-card form {
+  margin-bottom: 15px;
+}
+
+.summary-card label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.summary-card select {
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.summary-card h3 {
+  margin: 20px 0 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.summary-card table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.summary-card th,
+.summary-card td {
+  border: 1px solid #ccc;
+  padding: 12px;
+  text-align: center;
+}
+
+.summary-card th {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Button container below the table */
+.summary-card .link-container {
+  margin-top: 20px;
+}
+
+.summary-card .link-container a {
+  font-weight: bold;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.summary-card .link-container a:hover {
+  text-decoration: underline;
+}

@@ -1,23 +1,27 @@
-// Import dependencies
 const express = require("express");
-const schedule = require("node-schedule"); // For scheduling daily reset
+const schedule = require("node-schedule");
+const session = require("express-session");
 const db = require("./services/db");
+const crypto = require("crypto");
 
-// Create express app
 const app = express();
 
-// Use the Pug templating engine
 app.set("view engine", "pug");
 app.set("views", "./app/views");
 
-// Add static files location
 app.use(express.static("static"));
-
-// Middleware to parse request body
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Check Database Connection
+app.use(
+  session({
+    secret: "super-secret-key",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+// Check DB connection
 async function testDatabaseConnection() {
   try {
     await db.query("SELECT 1");
@@ -27,130 +31,222 @@ async function testDatabaseConnection() {
     process.exit(1);
   }
 }
-testDatabaseConnection(); // Run DB test
+testDatabaseConnection();
 
-// Ensure `water_intake` Table Exists
-async function ensureTableExists() {
+// Ensure tables exist
+async function ensureTablesExist() {
   try {
-    let sql = `
+    const usersSQL = `
+      CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(50) NOT NULL UNIQUE,
+        first_name VARCHAR(50),
+        last_name VARCHAR(50),
+        email VARCHAR(100),
+        gender ENUM('male', 'female', 'other'),
+        password_hash VARCHAR(255) NOT NULL
+      )
+    `;
+    const intakeSQL = `
       CREATE TABLE IF NOT EXISTS water_intake (
         id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT,
         time_slot ENUM('morning', 'afternoon', 'night') NOT NULL,
         amount INT NOT NULL DEFAULT 0,
         recorded_date DATE NOT NULL,
-        UNIQUE KEY unique_entry (time_slot, recorded_date)
+        UNIQUE KEY unique_entry (user_id, time_slot, recorded_date),
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `;
-    await db.query(sql);
-    console.log("Table check completed.");
+    await db.query(usersSQL);
+    await db.query(intakeSQL);
+    console.log("Tables ensured.");
   } catch (error) {
-    console.error("Error ensuring table exists:", error.message);
+    console.error("Error creating tables:", error.message);
     process.exit(1);
   }
 }
-ensureTableExists();
+ensureTablesExist();
 
-// Reset Daily Water Intake at Midnight
+// Reset intake daily at midnight
 schedule.scheduleJob("0 0 * * *", async function () {
   try {
-    let todayDate = new Date().toISOString().split("T")[0];
-
-    let resetSQL = `
-      INSERT INTO water_intake (time_slot, amount, recorded_date)
-      VALUES 
-        ('morning', 0, ?), 
-        ('afternoon', 0, ?), 
-        ('night', 0, ?)
+    const today = new Date().toISOString().split("T")[0];
+    const resetSQL = `
+      INSERT INTO water_intake (user_id, time_slot, amount, recorded_date)
+      SELECT id, 'morning', 0, ? FROM users
+      UNION
+      SELECT id, 'afternoon', 0, ? FROM users
+      UNION
+      SELECT id, 'night', 0, ? FROM users
       ON DUPLICATE KEY UPDATE amount = 0;
     `;
-
-    await db.query(resetSQL, [todayDate, todayDate, todayDate]);
-    console.log("Daily reset: Initialized new day with zero intake.");
+    await db.query(resetSQL, [today, today, today]);
+    console.log("Water intake reset for the new day.");
   } catch (error) {
-    console.error("Error resetting daily intake:", error);
+    console.error("Reset error:", error);
   }
 });
 
-// Redirect root (/) to log-intake
-app.get("/", (req, res) => {
-  res.redirect("/log-intake");
+// Routes
+app.get("/", (req, res) => res.redirect("/log-intake"));
+
+app.get("/logout", (req, res) => {
+  req.session.destroy(() => res.redirect("/login"));
 });
 
-// Log Water Intake Route
-app.get("/log-intake", (req, res) => {
-  res.render("log-intake");
+// Register GET
+app.get("/register", (req, res) => {
+  res.render("register");
 });
 
-app.post("/log-intake", async (req, res) => {
+// Register POST
+app.post("/register", async (req, res) => {
+  const { username, first, last, email, gender, password, repassword } =
+    req.body;
+
+  if (!username || !first || !last || !email || !gender || !password) {
+    return res.status(400).send("All fields are required.");
+  }
+
+  if (password !== repassword) {
+    return res.status(400).send("Passwords do not match.");
+  }
+
   try {
-    const { timeSlot, amount } = req.body;
-    const recordedDate = new Date().toISOString().split("T")[0];
+    const hash = crypto.createHash("sha256").update(password).digest("hex");
+    const sql = `
+      INSERT INTO users (username, first_name, last_name, email, gender, password_hash)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+    await db.query(sql, [username, first, last, email, gender, hash]);
+    res.redirect("/login");
+  } catch (error) {
+    console.error("Registration error:", error.message);
+    res.status(500).send("Failed to register. Try a different username.");
+  }
+});
 
-    if (!timeSlot || !amount) {
-      return res.status(400).send("Error: Missing required fields.");
+// Login GET
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+// Login POST (username OR email)
+// Login POST
+app.post("/login", async (req, res) => {
+  const { identifier, password } = req.body;
+
+  if (!identifier || !password) {
+    return res.status(400).send("Missing login credentials.");
+  }
+
+  const hash = crypto.createHash("sha256").update(password).digest("hex");
+  console.log("🔐 Login attempt with:", identifier, "Password hash:", hash);
+
+  try {
+    const results = await db.query(
+      "SELECT * FROM users WHERE (username = ? OR email = ?) AND password_hash = ?",
+      [identifier, identifier, hash]
+    );
+
+    console.log("🧾 Query result:", results);
+
+    const user = results.length > 0 ? results[0] : null;
+
+    if (!user) {
+      console.log("❌ No matching user found.");
+      return res.status(401).send("Invalid credentials.");
     }
 
-    let sql = `
-      INSERT INTO water_intake (time_slot, amount, recorded_date) 
-      VALUES (?, ?, ?) 
-      ON DUPLICATE KEY UPDATE amount = amount + VALUES(amount);
-    `;
-
-    await db.query(sql, [timeSlot, amount, recordedDate]);
-
-    res.redirect("/summary");
+    req.session.userId = user.id;
+    req.session.name = user.username;
+    res.redirect("/log-intake");
   } catch (error) {
-    console.error("Error inserting water intake:", error);
-    res.status(500).send("Internal Server Error. Check logs for details.");
+    console.error("Login error:", error.message);
+    res.status(500).send("Login failed. Try again.");
   }
 });
 
-// Summary Route - Displays Daily Intake
-app.get("/summary", async (req, res) => {
+// Intake Form
+app.get("/log-intake", (req, res) => {
+  if (!req.session.userId) return res.redirect("/login");
+  res.render("log-intake", { name: req.session.name });
+});
+
+// Intake Submission
+app.post("/log-intake", async (req, res) => {
+  if (!req.session.userId) return res.redirect("/login");
+
+  const { timeSlot, amount } = req.body;
+  const userId = req.session.userId;
+  const recordedDate = new Date().toISOString().split("T")[0];
+
+  if (!timeSlot || !amount) {
+    return res.status(400).send("Missing time slot or amount.");
+  }
+
+  const sql = `
+    INSERT INTO water_intake (user_id, time_slot, amount, recorded_date)
+    VALUES (?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE amount = amount + VALUES(amount)
+  `;
+
   try {
-    let sql = `
-      SELECT time_slot, SUM(amount) as total 
-      FROM water_intake 
-      WHERE recorded_date = CURDATE() 
-      GROUP BY time_slot
-    `;
+    await db.query(sql, [userId, timeSlot, amount, recordedDate]);
+    res.redirect("/summary");
+  } catch (error) {
+    console.error("Intake error:", error.message);
+    res.status(500).send("Could not save intake.");
+  }
+});
 
-    const results = await db.query(sql);
-    let intakeData = { morning: 0, afternoon: 0, night: 0, totalIntake: 0 };
+// Summary
+app.get("/summary", async (req, res) => {
+  if (!req.session.userId) return res.redirect("/login");
 
-    if (Array.isArray(results) && results.length > 0) {
-      results.forEach((row) => {
-        if (row.time_slot) {
-          intakeData[row.time_slot] = Number(row.total);
-          intakeData.totalIntake += Number(row.total);
-        }
-      });
+  try {
+    const results = await db.query(
+      `SELECT time_slot, SUM(amount) as total 
+       FROM water_intake 
+       WHERE recorded_date = CURDATE() AND user_id = ?
+       GROUP BY time_slot`,
+      [req.session.userId]
+    );
+
+    console.log("📊 Raw query results:", results);
+
+    let summary = { morning: 0, afternoon: 0, night: 0, totalIntake: 0 };
+
+    for (const row of results) {
+      const intake = Number(row.total); // ensure it's a number
+      summary[row.time_slot] = intake;
+      summary.totalIntake += intake;
     }
 
     res.render("summary", {
-      morningIntake: intakeData.morning || 0,
-      afternoonIntake: intakeData.afternoon || 0,
-      nightIntake: intakeData.night || 0,
-      totalIntake: intakeData.totalIntake || 0,
+      name: req.session.name,
+      ...summary,
     });
   } catch (error) {
-    console.error("Database error in /summary:", error);
-    res.status(500).send("Internal Server Error. Check logs for details.");
+    console.error("❌ Summary error:", error); // FULL error object
+    res.status(500).send("Error generating summary.");
   }
 });
 
-// Auto Cleanup - Deletes Records Older Than 7 Days
+// Cleanup old entries
 setInterval(async () => {
   try {
-    let deleteSQL = `DELETE FROM water_intake WHERE recorded_date < DATE_SUB(CURDATE(), INTERVAL 7 DAY)`;
-    await db.query(deleteSQL);
-    console.log("Deleted old water intake records older than 7 days.");
+    await db.query(
+      `DELETE FROM water_intake WHERE recorded_date < DATE_SUB(CURDATE(), INTERVAL 7 DAY)`
+    );
+    console.log("Old intake records deleted.");
   } catch (error) {
-    console.error("Error deleting old records:", error);
+    console.error("Cleanup error:", error.message);
   }
-}, 24 * 60 * 60 * 1000); // Every 24 hours
+}, 24 * 60 * 60 * 1000);
 
-// Start server on port 3000
+// Start
 app.listen(3000, () => {
-  console.log(`Server running at http://127.0.0.1:3000/`);
+  console.log("✅ Server running at http://127.0.0.1:3000");
 });

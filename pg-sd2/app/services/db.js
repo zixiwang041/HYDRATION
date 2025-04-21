@@ -8,7 +8,7 @@ const config = {
     port: process.env.DB_PORT || 3306, // Default MySQL port
     user: process.env.MYSQL_ROOT_USER || "root",
     password: process.env.MYSQL_ROOT_PASSWORD || "password",
-    database: process.env.MYSQL_DATABASE || "hydration_db",
+    database: process.env.MYSQL_DATABASE || "sd2-db",
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,

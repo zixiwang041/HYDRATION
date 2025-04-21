@@ -1,11 +1,13 @@
 version: "3.3"
+
 services:
   web:
     build:
       context: ./
     volumes:
       - .:/src
-    command: supervisor -e  'js,pug,html' index.js
+      - /src/node_modules # Prevent host volume from overwriting container node_modules
+    command: supervisor -e 'js,pug,html' app/app.js
     ports:
       - "3000:3000"
     healthcheck:
@@ -15,6 +17,7 @@ services:
       retries: 5
     depends_on:
       - db
+
   db:
     image: mysql
     restart: always
@@ -23,7 +26,9 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./db-init:/docker-entrypoint-initdb.d
+      - mysql-data:/var/lib/mysql # ✅ Persist MySQL data
+      - ./db-init:/docker-entrypoint-initdb.d # Run initial SQL only on first build
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     restart: always
@@ -31,3 +36,6 @@ services:
       - ./.env
     ports:
       - "8081:80"
+
+volumes:
+  mysql-data: # ✅ Named volume declaration
