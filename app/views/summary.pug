@@ -1,0 +1,50 @@
+doctype html
+html
+  head
+    title Water Intake Summary
+    link(rel="stylesheet", href="/style.css")
+  body
+    //- Header
+    header.header
+      h1 Hydration Tracker
+      if name
+        h3 Hello, #{name}!
+        a(href="/logout", style="color: red; font-size: 0.9rem; margin-left: 1rem;") Logout
+
+    //- Main content
+    main
+      div.summary-card
+        h2 Water Intake Summary
+
+        form(method="GET" action="/summary")
+          label(for="date") Date Select:
+          select(name="date" id="date")
+            option(value="today") Today
+
+        h3 Reports:
+
+        table
+          thead
+            tr
+              th Time Slot
+              th Intake (ml)
+          tbody
+            tr
+              td Morning
+              td #{morning} ml
+            tr
+              td Afternoon
+              td #{afternoon} ml
+            tr
+              td Night
+              td #{night} ml
+            tr
+              td Total:
+              td #{totalIntake} ml
+
+        .link-container
+          a(href="/log-intake") Add Water Intake
+
+    //- Footer
+    footer
+      p © 2025 Hydration Tracker. All rights reserved.

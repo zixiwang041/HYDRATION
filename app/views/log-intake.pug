@@ -1,0 +1,44 @@
+doctype html
+html
+  head
+    title Log Your Water Intake
+    link(rel="stylesheet", href="/style.css") 
+
+  body
+    // Header
+    header.header
+      h1 Hydration Tracker
+      if name
+        h3 Hello, #{name}!
+        a(href="/logout" style="color: red; font-size: 0.9rem; margin-left: 1rem;") Logout
+
+    // Main content
+    main
+      div.card-form
+        h2 Log Your Water Intake
+
+        form(action='/log-intake' method='POST')
+          label(for="timeSlot") Select Time Slot:
+          select(name='timeSlot' required)
+            option(value='' disabled selected) -- Choose a time --
+            option(value='morning') Morning
+            option(value='afternoon') Afternoon
+            option(value='night') Night
+
+          label(for="amount") Enter amount in ml:
+          input(
+            type='number' 
+            name='amount' 
+            required 
+            min='1' 
+            placeholder='Enter ml'
+          )
+
+          button(type='submit') Add water intake
+
+        div.link-container
+          a(href='/summary') View water intake details
+
+    // Footer
+    footer
+      p © 2025 Hydration Tracker. All rights reserved.
