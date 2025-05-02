@@ -24,7 +24,7 @@ app.use(
 // Check DB connection
 async function testDatabaseConnection() {
   try {
-    await db.query("SELECT 1");
+    await db.query("SELECT * FROM users");
     console.log("Database connection successful.");
   } catch (error) {
     console.error("Database connection failed:", error.message);
