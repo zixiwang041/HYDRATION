@@ -1,6 +1,7 @@
 const express = require("express");
 const schedule = require("node-schedule");
 const session = require("express-session");
+const flash = require('connect-flash');
 const db = require("./services/db");
 const crypto = require("crypto");
 
@@ -20,6 +21,15 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+app.use(flash());
+
+// Middleware. Sends flash messages into front end
+app.use((req, res, next) => {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  next();
+});
 
 // Check DB connection
 async function testDatabaseConnection() {
@@ -156,7 +166,8 @@ app.post("/login", async (req, res) => {
 
     if (!user) {
       console.log("❌ No matching user found.");
-      return res.status(401).send("Invalid credentials.");
+      req.flash('error', 'Invalid credentials.');
+      return res.redirect('/login');
     }
 
     req.session.userId = user.id;
