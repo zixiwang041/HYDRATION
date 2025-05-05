@@ -1,19 +1,15 @@
-doctype html
-html
-  head
-    title Water Intake Summary
-    link(rel="stylesheet", href="/style.css")
-  body
-    //- Header
+extends animation.pug
+
+block content
+  .content
     header.header
       h1 Hydration Tracker
       if name
         h3 Hello, #{name}!
         a(href="/logout", style="color: red; font-size: 0.9rem; margin-left: 1rem;") Logout
 
-    //- Main content
     main
-      div.summary-card
+      .summary-card
         h2 Water Intake Summary
 
         form(method="GET" action="/summary")
@@ -45,6 +41,3 @@ html
         .link-container
           a(href="/log-intake") Add Water Intake
 
-    //- Footer
-    footer
-      p © 2025 Hydration Tracker. All rights reserved.

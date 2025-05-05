@@ -1,13 +1,7 @@
-doctype html
-html
-  head
-    title Sign Up
-    link(rel="stylesheet", href="/style.css")
+extends animation.pug
 
-  body
-    header.header
-      h1 Hydration Tracker
-
+block content
+  .content
     main
       .card-form
         h2 Registration Form
@@ -54,9 +48,6 @@ html
           // Submit Button
           button(type="submit") Submit
 
-        // Link to login
         .link-container
           a(href="/login") Already have an account? Log in
 
-    footer
-      p © 2025 Hydration Tracker. All rights reserved.

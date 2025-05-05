@@ -1,20 +1,15 @@
-doctype html
-html
-  head
-    title Log Your Water Intake
-    link(rel="stylesheet", href="/style.css") 
+extends animation.pug
 
-  body
-    // Header
+block content
+  .content
     header.header
       h1 Hydration Tracker
       if name
         h3 Hello, #{name}!
-        a(href="/logout" style="color: red; font-size: 0.9rem; margin-left: 1rem;") Logout
+        a(href="/logout", style="color: red; font-size: 0.9rem; margin-left: 1rem;") Logout
 
-    // Main content
     main
-      div.card-form
+      .card-form
         h2 Log Your Water Intake
 
         form(action='/log-intake' method='POST')
@@ -36,9 +31,5 @@ html
 
           button(type='submit') Check water intake
 
-        div.link-container
+        .link-container
           a(href='/summary') View water intake details
-
-    // Footer
-    footer
-      p © 2025 Hydration Tracker. All rights reserved.
