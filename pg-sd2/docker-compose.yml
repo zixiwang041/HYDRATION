@@ -5,7 +5,7 @@ services:
     volumes:
       - .:/src
       - /src/node_modules # Prevent host volume from overwriting container node_modules
-    command: supervisor -e 'js,pug,html' app/app.js
+    command: supervisor -e 'js,pug,html' app.js
     ports:
       - "3000:3000"
     healthcheck:
@@ -24,7 +24,7 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - mysql-data:/var/lib/mysql # ✅ Persist MySQL data
+      - mysql-data:/var/lib/mysql # Persist MySQL data
       - ./db-init:/docker-entrypoint-initdb.d # Run initial SQL only on first build
 
   phpmyadmin:
@@ -36,4 +36,4 @@ services:
       - "8081:80"
 
 volumes:
-  mysql-data: # ✅ Named volume declaration
+  mysql-data: # Named volume declaration

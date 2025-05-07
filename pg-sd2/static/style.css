@@ -1,4 +1,4 @@
-/* Reset */
+/* ---------------------- Reset ---------------------- */
 * {
   margin: 0;
   padding: 0;
@@ -14,7 +14,7 @@ body {
   flex-direction: column;
 }
 
-/* Sticky Header */
+/* ---------------------- Header ---------------------- */
 .header {
   background: rgb(156, 192, 232);
   color: black;
@@ -26,7 +26,26 @@ body {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Main Layout */
+.total-intake {
+  font-size: 1rem;
+  margin-top: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+.logout-link {
+  color: red;
+  font-size: 0.9rem;
+  margin-left: 1rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.logout-link:hover {
+  color: darkred;
+}
+
+/* ---------------------- Main Layout ---------------------- */
 main {
   flex: 1;
   display: flex;
@@ -35,7 +54,7 @@ main {
   padding: 20px 10px;
 }
 
-/* Card Form Container */
+/* ---------------------- Card Forms ---------------------- */
 .card-form {
   background-color: #fff;
   padding: 20px 20px;
@@ -47,7 +66,6 @@ main {
   margin: 0 auto;
 }
 
-/* Title */
 .card-form h2 {
   color: #4caf50;
   margin-bottom: 20px;
@@ -55,15 +73,7 @@ main {
   font-size: 22px;
 }
 
-/* Two-column layout */
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px 20px;
-  margin-bottom: 20px;
-}
-
-/* Input styling */
+/* Input + Labels */
 .card-form label {
   font-size: 14px;
   font-weight: bold;
@@ -95,7 +105,15 @@ main {
   outline: none;
 }
 
-/* Gender Section */
+/* Grid layout (if needed) */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px 20px;
+  margin-bottom: 20px;
+}
+
+/* Gender radio buttons */
 .gender-group {
   margin: 15px 0;
 }
@@ -120,7 +138,7 @@ main {
   gap: 5px;
 }
 
-/* Button */
+/* Form button */
 .card-form button {
   width: 100%;
   padding: 12px;
@@ -139,7 +157,7 @@ main {
   background-color: #0056b3;
 }
 
-/* Link Container */
+/* Link section below form */
 .link-container {
   text-align: center;
   margin-top: 12px;
@@ -155,30 +173,7 @@ main {
   text-decoration: underline;
 }
 
-/* Sticky Footer */
-footer {
-  background: rgb(156, 192, 232);
-  padding: 14px;
-  text-align: center;
-  font-size: 13.5px;
-  color: #666;
-  flex-shrink: 0;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
-  margin-top: auto;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-  .radio-options {
-    flex-direction: column;
-    gap: 10px;
-  }
-}
-
-/* ===== Summary Page Styles ===== */
+/* ---------------------- Summary Page ---------------------- */
 .summary-card {
   background-color: #fff;
   padding: 25px;
@@ -235,7 +230,6 @@ footer {
   color: white;
 }
 
-/* Button container below the table */
 .summary-card .link-container {
   margin-top: 20px;
 }
@@ -250,6 +244,7 @@ footer {
   text-decoration: underline;
 }
 
+<<<<<<< Updated upstream
 /* Reset */
 * {
   margin: 0;
@@ -357,4 +352,28 @@ footer {
   margin-top: 30px;
   font-size: 13px;
   color: #666;
+=======
+/* ---------------------- Footer ---------------------- */
+footer {
+  background: rgb(156, 192, 232);
+  padding: 14px;
+  text-align: center;
+  font-size: 13.5px;
+  color: #666;
+  flex-shrink: 0;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+  margin-top: auto;
+}
+
+/* ---------------------- Responsive ---------------------- */
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .radio-options {
+    flex-direction: column;
+    gap: 10px;
+  }
+>>>>>>> Stashed changes
 }

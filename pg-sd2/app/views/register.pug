@@ -1,53 +1,55 @@
+<<<<<<< Updated upstream
 extends animation.pug
+=======
+doctype html
+html
+  include partials/html-head
+  body
+    header.header
+      h1 Hydration Tracker
+>>>>>>> Stashed changes
 
 block content
   .content
     main
       .card-form
-        h2 Registration Form
-        form#register-form(action="/register" method="POST")
+        h2 Register
 
-          // Username
+        if error
+          p.error-msg(style="color: red") #{error}
+
+        form(action="/register" method="POST")
           label(for="username") Username:
-          input#username(type="text" name="username" required)
+          input#username(type="text" name="username" required placeholder="Choose a username" value=username)
 
-          // First Name
           label(for="first") First Name:
-          input#first(type="text" name="first" required)
+          input#first(type="text" name="first" required placeholder="Enter your first name" value=first)
 
-          // Last Name
           label(for="last") Last Name:
-          input#last(type="text" name="last" required)
+          input#last(type="text" name="last" required placeholder="Enter your last name" value=last)
 
-          // Email
           label(for="email") Email:
-          input#email(type="email" name="email" required)
+          input#email(type="email" name="email" required placeholder="Enter your email" value=email)
 
-          // Password
-          label(for="password") Password:
-          input#password(
-            type="password"
-            name="password"
-            pattern="^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9])\\S{8,}$"
-            title="Password must contain at least one number, one alphabet, one symbol, and be at least 8 characters long"
-            required
-          )
-
-          // Re-type Password
-          label(for="repassword") Re-type Password:
-          input#repassword(type="password" name="repassword" required)
-
-          // Gender
           label(for="gender") Gender:
           select#gender(name="gender" required)
-            option(value="" disabled selected) Select your gender
-            option(value="male") Male
-            option(value="female") Female
-            option(value="other") Other
+            option(value="" disabled selected=!gender) Select gender
+            option(value="male" selected=(gender === 'male')) Male
+            option(value="female" selected=(gender === 'female')) Female
+            option(value="other" selected=(gender === 'other')) Other
 
-          // Submit Button
-          button(type="submit") Submit
+          label(for="password") Password:
+          input#password(type="password" name="password" required placeholder="Enter your password")
+
+          label(for="repassword") Confirm Password:
+          input#repassword(type="password" name="repassword" required placeholder="Re-enter your password")
+
+          button(type="submit") Create Account
 
         .link-container
-          a(href="/login") Already have an account? Log in
+          a(href="/login") Already have an account? Login
 
+<<<<<<< Updated upstream
+=======
+    include partials/footer
+>>>>>>> Stashed changes

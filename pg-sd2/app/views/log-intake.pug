@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 extends animation.pug
 
 block content
@@ -7,6 +8,14 @@ block content
       if name
         h3 Hello, #{name}!
         a(href="/logout", style="color: red; font-size: 0.9rem; margin-left: 1rem;") Logout
+=======
+doctype html
+html
+  include partials/html-head
+  body
+    // Header
+    include partials/header
+>>>>>>> Stashed changes
 
     main
       .card-form
@@ -29,7 +38,17 @@ block content
             placeholder='Enter ml'
           )
 
-          button(type='submit') Check water intake
+          button(type='submit') Add water intake
 
+<<<<<<< Updated upstream
         .link-container
           a(href='/summary') View water intake details
+=======
+        div.link-container
+          a(href='/summary') View water intake Summary
+
+    include partials/footer
+    // Footer
+    //footer
+      p © 2025 Hydration Tracker. All rights reserved.
+>>>>>>> Stashed changes

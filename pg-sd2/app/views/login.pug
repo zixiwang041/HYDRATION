@@ -1,11 +1,15 @@
 doctype html
 html
+<<<<<<< Updated upstream
   head
     title Login
     link(rel="stylesheet", href="/style.css")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js")
     script(src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js")
 
+=======
+  include partials/html-head
+>>>>>>> Stashed changes
   body
     #vanta-header
     .content
@@ -16,10 +20,37 @@ html
             label(for="identifier") Email or Username:
             input#identifier(type="text" name="identifier" required placeholder="Enter your email or username")
 
+<<<<<<< Updated upstream
             label(for="password") Password:
             input#password(type="password" name="password" required placeholder="Enter your password")
 
             button.ripple-hover(type="submit") Login
+=======
+    main
+      .card-form
+        h2 Login
+
+        if error
+          p.error-msg(style="color: red") #{error}
+
+        form(action="/login" method="POST")
+          label(for="identifier") Email or Username:
+          input#identifier(
+            type="text"
+            name="identifier"
+            required
+            placeholder="Enter your email or username"
+            value=identifier
+          )
+
+          label(for="password") Password:
+          input#password(
+            type="password"
+            name="password"
+            required
+            placeholder="Enter your password"
+          )
+>>>>>>> Stashed changes
 
           .link-container
             a(href="/register") Don’t have an account? Register here
@@ -27,6 +58,7 @@ html
       footer
         p © 2025 Hydration Tracker. All rights reserved.
 
+<<<<<<< Updated upstream
     // Vanta script
     script.
       VANTA.WAVES({
@@ -43,3 +75,6 @@ html
         waveSpeed: 1.00,
         zoom: 0.85
       });
+=======
+    include partials/footer
+>>>>>>> Stashed changes

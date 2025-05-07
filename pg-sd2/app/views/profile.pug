@@ -1,0 +1,45 @@
+doctype html
+html
+  include partials/html-head
+  body
+    include partials/header
+
+    main
+      .card-form
+        h2 Your Profile
+
+        form(action="/profile" method="POST")
+          label(for="name") Full Name:
+          input(type="text" name="name" required value=user.name)
+
+          label(for="email") Email:
+          input(type="email" name="email" required value=user.email)
+
+          label(for="gender") Gender:
+          select(name="gender")
+            option(value="male" selected=(user.gender === 'male')) Male
+            option(value="female" selected=(user.gender === 'female')) Female
+            option(value="other" selected=(user.gender === 'other')) Other
+
+          button(type="submit") Update Profile
+
+      .card-form
+        h3 Update Daily Hydration Goal
+
+        if successMessage
+          p(style="color: green") #{successMessage}
+        if error
+          p(style="color: red") #{error}
+
+        form(method="POST" action="/update-goal")
+          label(for="dailyGoal") Set Daily Goal (ml):
+          input(type="number" name="dailyGoal" min="500" required value=user.daily_goal)
+
+          button(type="submit") Update Goal
+
+      .link-container
+        a(href="/log-intake") Log Water |
+        a(href="/summary") View Summary |
+        a(href="/logout") Logout
+
+    include partials/footer

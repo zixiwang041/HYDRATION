@@ -1,0 +1,8 @@
+header.header
+  h1 Hydration Tracker
+  if name
+    h3 Hello, #{name}!
+  if totalIntake
+    p.total-intake Today's Total: #{totalIntake} ml
+  if name
+    a.logout-link(href="/logout") Logout

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 extends animation.pug
 
 block content
@@ -7,6 +8,14 @@ block content
       if name
         h3 Hello, #{name}!
         a(href="/logout", style="color: red; font-size: 0.9rem; margin-left: 1rem;") Logout
+=======
+doctype html
+html
+  include partials/html-head
+  body
+    //- Header
+    include partials/header
+>>>>>>> Stashed changes
 
     main
       .summary-card
@@ -41,3 +50,11 @@ block content
         .link-container
           a(href="/log-intake") Add Water Intake
 
+<<<<<<< Updated upstream
+=======
+    include partials/footer
+
+    //- Footer
+    //footer
+      p © 2025 Hydration Tracker. All rights reserved.
+>>>>>>> Stashed changes
